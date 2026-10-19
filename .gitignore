@@ -1,0 +1,16 @@
+# private: personal config and all job-search data never go to the public repo
+config.local.json
+*.jsonl
+known.json
+msall.json
+ms*.json
+prevcomp.json
+badcomp.txt
+auto.json
+last.*
+q*.txt
+usage/
+state/
+work/
+.DS_Store
+__pycache__/

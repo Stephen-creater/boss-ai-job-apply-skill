@@ -1,0 +1,23 @@
+{
+  "space": 0,
+  "search_tab": "p1",
+  "state_dir": "~/boss-apply-data/state",
+  "work_dir": "~/boss-apply-data/work",
+  "round": "round-YYYY-MM-DD",
+  "past_employers": [
+    "公司A",
+    "公司B"
+  ],
+  "limits": {
+    "day_sends": 50,
+    "day_pages": 250,
+    "day_searches": 15,
+    "hour_pages": 60,
+    "hour_sends": 20,
+    "session_minutes": 45,
+    "rest_minutes": 30,
+    "sessions_per_day": 3
+  },
+  "blocked_until": "",
+  "ramp_day_sends": {}
+}
