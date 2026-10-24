@@ -28,7 +28,7 @@ print(','.join(f"{h}|{ms[h]['q']}|{ms[h]['c']}|{ms[h].get('sal','')}" for h in q
 PY
 )
 [ -z "$H" ] && { echo EMPTY; exit; }
-python3 "$SK/run.py" pread "$H" > last.raw 2>&1; grep -E "LOGOUT|RESTRICT|READERR|NOCARD|MISMATCH|上限|停止|休息|!!!" last.raw | cut -c1-160
+python3 "$SK/run.py" pread "$H" > last.raw 2>&1; grep -v '^{' last.raw | grep -E "LOGOUT|RESTRICT|READERR|NOCARD|MISMATCH|上限|停止|休息|!!!" | cut -c1-160
 grep '^{' last.raw > last.jsonl; cat last.jsonl >> "$R"
-grep -qE "LOGOUT|RESTRICT|!!!|已停止|上限|休息" last.raw && { echo "!!! 已停止（见上一行原因）"; exit 1; }
+grep -v '^{' last.raw | grep -qE "LOGOUT|RESTRICT|!!!|已停止|上限|休息" && { echo "!!! 已停止（见上一行原因）"; exit 1; }
 python3 "$SK/show2.py" ${4:-220} < last.jsonl; python3 "$SK/log.py" "$(cat auto.json)" >/dev/null
