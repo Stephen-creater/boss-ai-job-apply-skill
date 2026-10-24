@@ -11,7 +11,7 @@
   "limits": {
     "day_sends": 50,
     "day_pages": 250,
-    "day_searches": 15,
+    "day_searches": 25,
     "hour_pages": 60,
     "hour_sends": 20,
     "session_minutes": 45,

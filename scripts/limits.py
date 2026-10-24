@@ -4,7 +4,7 @@ import json, os, sys, time
 from datetime import datetime, timezone, timedelta
 from common import D, CFG
 BJ = timezone(timedelta(hours=8))
-L = {'day_sends': 50, 'day_pages': 250, 'day_searches': 15, 'hour_pages': 60, 'hour_sends': 20,
+L = {'day_sends': 50, 'day_pages': 250, 'day_searches': 25, 'hour_pages': 60, 'hour_sends': 20,
      'session_minutes': 45, 'rest_minutes': 30, 'sessions_per_day': 3}
 L.update(CFG.get('limits', {}))
 def today(): return datetime.now(BJ).strftime('%Y-%m-%d')
