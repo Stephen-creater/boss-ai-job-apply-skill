@@ -13,6 +13,8 @@ elif f == 'pread':
     limits.check('page', len(env['H'].split(',')))
 elif f == 'psend':
     limits.check('send', 1); limits.check('page', 1)
+import space
+env['SPACE'] = space.ensure()   # recreate the space if ego cleared it; stop if the new one is not logged in
 js = 'const ENV=' + json.dumps(env, ensure_ascii=False) + ';\n' + open(SK + '/guard.js').read() + '\n' + open(f'{SK}/{f}.js').read()
 r = subprocess.run(['ego-browser', 'nodejs'], input=js, text=True, capture_output=True)
 lines = [l for l in (r.stdout + r.stderr).splitlines() if 'notice' not in l and 'browser-up' not in l]

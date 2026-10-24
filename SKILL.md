@@ -13,7 +13,7 @@ description: 在 BOSS 直聘上按固定规则批量筛选并投递 AI 产品 / 
 1. 读 `docs/防风控规则.md`，确认今天不在冷却期（`config.local.json` 里的 `blocked_until`）。
 2. 运行 `python3 scripts/limits.py` 看今天的用量和是否已有停止标记。有停止标记就不做，直接告诉用户原因。
 3. 确认 `config.local.json`：`space`（浏览器空间编号）、`round`（当天记录目录，按北京时间日期）、`past_employers`（过往公司，永不投递）。
-4. 浏览器空间：**沿用同一个空间，不每天新建**；一天只请用户登录一次。登录状态用 `.nav-figure` 判断。
+4. 浏览器空间：沿用同一个空间；一天只请用户登录一次。登录状态用 `.nav-figure` 判断。Ego 会在休息期间清掉闲置空间，`run.py` 发现空间没了会自动新建（`scripts/space.py`）：新空间已登录就继续，没登录就停下来告诉用户，**不请用户重新登录**。
 
 ## 二、硬性筛选规则
 
