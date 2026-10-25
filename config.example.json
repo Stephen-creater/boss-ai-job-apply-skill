@@ -19,5 +19,14 @@
     "sessions_per_day": 3
   },
   "blocked_until": "",
-  "ramp_day_sends": {}
+  "ramp_day_sends": {},
+  "main_cities": {
+    "杭州": "101210100",
+    "上海": "101020100"
+  },
+  "extra_cities": {
+    "北京": "101010100",
+    "深圳": "101280600",
+    "广州": "101280100"
+  }
 }

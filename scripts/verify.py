@@ -2,7 +2,7 @@
 Checks: count, unique links, overlap with earlier rounds, cities, salary rules, toast evidence, delays, past employers."""
 import json, glob, os, re, sys
 from datetime import datetime
-from common import W, CFG, BLOCK
+from common import W, CFG, BLOCK, CITY_CODE, EXTRA_CITIES
 st = json.load(open(W + '/boss-state.json')); S = st['success']
 base = os.path.dirname(W); prev = set()
 for f in glob.glob(base + '/round-*/decisions.jsonl'):
@@ -13,12 +13,14 @@ for f in glob.glob(base + '/round-*/decisions.jsonl'):
             if d.get('decision') == 'success': prev.add(d['href'])
         except Exception: pass
 bad = []
+ex = sum(s['city'] in EXTRA_CITIES for s in S)
+if ex > (len(S) - ex) / 2: bad.append(('补充城市', ex, '超过主力城市的一半'))
 for s in S:
     sal = s['salary']; m = re.match(r'(\d+)-(\d+)K', sal); d = re.match(r'(\d+)-(\d+)元/天', sal)
     if '实习' in s['employmentType']:
         if not d or int(d.group(1)) < 200: bad.append((s['company'], sal, '实习日薪'))
     elif not m or not (12 <= int(m.group(2)) <= 30): bad.append((s['company'], sal, '正职月薪'))
-    if s['city'] not in ('杭州', '上海'): bad.append((s['company'], s['city'], '城市'))
+    if s['city'] not in CITY_CODE: bad.append((s['company'], s['city'], '城市'))
     if re.search(BLOCK, s['company']): bad.append((s['company'], '过往公司'))
 ts = sorted(datetime.fromisoformat(s['time'].replace('Z', '+00:00')) for s in S if 'T' in s['time'])
 gaps = [(b - a).total_seconds() for a, b in zip(ts, ts[1:])]
