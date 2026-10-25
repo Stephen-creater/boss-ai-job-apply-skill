@@ -21,7 +21,7 @@ for x in open(Q):
   if not x or x in done or x in kn or x not in ms: continue
   t=ms[x]['t']
   if any(b in t for b in bad): continue
-  if re.search(r'销|客户经理|拓展|战略|标注|数据项目|客服|编导|剪辑|策划|猎头|招聘|审核', re.split(r'[-]',t)[0]): continue
+  if re.search(r'销|客户经理|拓展|战略|标注|数据项目|客服|编导|剪辑|策划|猎头|招聘专员|招聘顾问|招聘经理|招聘主管|审核', re.split(r'[-]',t)[0]): continue
   q.append(x)
 q.sort(key=lambda h:(ms[h]['q'],ms[h]['c'],ms[h].get('sal','')))
 print(','.join(f"{h}|{ms[h]['q']}|{ms[h]['c']}|{ms[h].get('sal','')}" for h in q[:N])); print(len(q)-min(len(q),N),file=sys.stderr)
