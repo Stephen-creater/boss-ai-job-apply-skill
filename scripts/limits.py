@@ -32,6 +32,7 @@ def check(kind, n=1):
     if bu and today() < bu: sys.exit(f"已停止：账号风控冷却期，{bu} 之前不操作 BOSS。")
     ramp = CFG.get('ramp_day_sends', {}).get(today())
     if ramp is not None: L['day_sends'] = min(L['day_sends'], ramp)
+    L.update(CFG.get('day_overrides', {}).get(today(), {}))   # one-day exceptions the user approved
     h = halted()
     if h: sys.exit(f"已停止：今天出现过异常（{h.strip()}），按规则当天不再操作。")
     ev = _load()['events']; now = time.time(); day0 = 0; hr = now - 3600
