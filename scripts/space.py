@@ -6,18 +6,20 @@ from common import ROOT, CFG
 import limits
 
 NAME = 'BOSS AI投递'
+from datetime import datetime
 
 def _run(js):
     r = subprocess.run(['ego-browser', 'nodejs'], input=js, text=True, capture_output=True)
     return r.stdout + r.stderr
 
 def ensure():
-    out = _run('const s = await listTaskSpaces(); console.log("SPACES", JSON.stringify(s.map(x=>x.id)));')
+    # 只算仍归 agent 的空间；空间被 Ego 收回给用户（ownership=user）也当作“没了”，新建一个，不去抢用户的空间
+    out = _run('const s = await listTaskSpaces(); console.log("SPACES", JSON.stringify(s.filter(x=>x.ownership==="agent").map(x=>x.id)));')
     m = re.search(r'SPACES (\[.*\])', out)
     if m and CFG['space'] in json.loads(m.group(1)):
         return CFG['space']
     limits.check('page', 1)
-    out = _run(f'''const task = await taskSpace({json.dumps(NAME)}); console.log("SPACE", task.spaceId);
+    out = _run(f'''const task = await taskSpace({json.dumps(NAME + datetime.now().strftime(' %m%d-%H%M'))}); console.log("SPACE", task.spaceId);
 const p = task.page("p1");
 try {{ await p.goto("https://www.zhipin.com/web/geek/jobs?city=101210100"); }} catch(e) {{}}
 await p.waitForTimeout(4500);
