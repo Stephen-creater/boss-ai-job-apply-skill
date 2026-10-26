@@ -18,6 +18,14 @@ def halted():
 def halt(reason):
     os.makedirs(D + '/usage', exist_ok=True)
     open(halt_file(), 'w').write(f"{datetime.now(BJ).isoformat()} {reason}\n")
+def _lf(): return f"{D}/usage/LOADFAIL-{today()}.json"
+def loadfail():
+    """“数据加载失败”: 1st/2nd time today -> pause 60 min; 3rd time -> halt the day."""
+    try: d = json.load(open(_lf()))
+    except Exception: d = {'n': 0}
+    d['n'] += 1; d['until'] = time.time() + 3600; json.dump(d, open(_lf(), 'w'))
+    if d['n'] >= 3: halt(f'数据加载失败第{d["n"]}次')
+    return d['n']
 def _sum(ev, kind, since):
     return sum(e['n'] for e in ev if e['k'] == kind and e['t'] >= since)
 def sessions(ev):
@@ -34,6 +42,10 @@ def check(kind, n=1):
     if ramp is not None: L['day_sends'] = min(L['day_sends'], ramp)
     L.update(CFG.get('day_overrides', {}).get(today(), {}))   # one-day exceptions the user approved
     h = halted()
+    try:
+        lf = json.load(open(_lf()))
+        if time.time() < lf['until']: sys.exit(f"暂停中：今天第 {lf['n']} 次出现“数据加载失败”，按规则停 60 分钟，{datetime.fromtimestamp(lf['until'], BJ):%H:%M} 后再继续。")
+    except (FileNotFoundError, KeyError, ValueError): pass
     if h: sys.exit(f"已停止：今天出现过异常（{h.strip()}），按规则当天不再操作。")
     ev = _load()['events']; now = time.time(); day0 = 0; hr = now - 3600
     caps = {'send': ('day_sends', 'hour_sends'), 'page': ('day_pages', 'hour_pages'), 'search': ('day_searches', None)}

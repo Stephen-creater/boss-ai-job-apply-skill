@@ -5,4 +5,6 @@ async function loginOK(p){
   if (s.restrict) { console.log("RESTRICT"); return false; }
   return s.nav && !s.dlg && !s.lock;
 }
+// Right panel shows "数据加载失败": the site is refusing data — treat as an early throttling signal.
+async function panelFail(p){ return await p.evaluate(()=>/数据加载失败/.test(document.querySelector('.job-detail-container')?.innerText||'')); }
 function rnd(a,b){ return a+Math.floor(Math.random()*(b-a)); }

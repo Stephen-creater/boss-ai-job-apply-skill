@@ -27,6 +27,10 @@ elif f == 'pread':
 elif f == 'psend':
     limits.record('page', 1)
     if '"ok":true' in out: limits.record('send', 1)
+# ---- “数据加载失败” => pause 60 min (3rd time today => halt the day) ----
+if 'LOADFAIL' in out:
+    n = limits.loadfail()
+    lines.append(f'!!! 页面“数据加载失败”（今天第 {n} 次），' + ('已写入当日停止标记，今天不再操作。' if n >= 3 else '按规则暂停 60 分钟。'))
 # ---- anomaly => halt the whole day ----
 if re.search(r'LOGOUT|RESTRICT|"block":true|Control of this task space is with the user', out):
     limits.halt(re.search(r'LOGOUT|RESTRICT|"block":true|Control of this task space', out).group(0))

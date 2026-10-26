@@ -20,7 +20,7 @@ await p.waitForTimeout(rnd(1500,3000));
 const chk = await p.evaluate(() => { const d=document.querySelector('.job-detail-container');
   return { activeHref: document.querySelector('.job-card-box.active a, .job-card-wrap.active a')?.getAttribute('href')?.replace(/\?.*/,''), btn: d?.querySelector('.op-btn-chat')?.innerText.trim() }; });
 if (chk.activeHref !== H) { console.log("ABORT active card mismatch", JSON.stringify(chk)); process.exit(0); }
-if (chk.btn !== "立即沟通") { console.log("ABORT btn", chk.btn); process.exit(0); }
+if (chk.btn !== "立即沟通") { if (await panelFail(p)) console.log("LOADFAIL"); console.log("ABORT btn", chk.btn); process.exit(0); }
 const t0 = Date.now();
 await p.evaluate(()=>document.querySelector('.job-detail-container .op-btn-chat')?.scrollIntoView({block:'center'})); await p.waitForTimeout(rnd(500,1200));
 await p.click('.job-detail-container .op-btn-chat', {label:"start chat in detail panel"});

@@ -24,6 +24,7 @@ for (const item of ENV.H.split(",")) { try {
       name:q('.job-name'), salaryRaw:q('.job-salary'), tags:q('.tag-list'), btn:d?.querySelector('.op-btn-chat')?.innerText.trim(),
       desc:d?.querySelector('.desc')?.innerText?.trim(), loc:q('.job-address-desc'), boss:q('.boss-info-attr'), card: card?.innerText.replace(/\s+/g,' ').slice(0,160) }; });
   if (!(await loginOK(p))) { console.log("LOGOUT"); process.exit(0); }
+  if (!r.desc && await panelFail(p)) { console.log("LOADFAIL"); process.exit(0); }
   if (r.activeHref!==H) { console.log("MISMATCH", H, r.activeHref); continue; }
   const cardTxt = r.card||''; const parts = cardTxt.split(' ');
   const out = { url:H, name:r.name, salary:dec(r.salaryRaw).replace(/\s+/g,''), city:(r.loc||cardTxt).match(/杭州|上海|北京|深圳|广州|南京|苏州|宁波|成都|武汉/)?.[0]||'', loc:r.loc,
