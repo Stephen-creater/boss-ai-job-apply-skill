@@ -2,7 +2,7 @@
 Checks: count, unique links, overlap with earlier rounds, cities, salary rules, toast evidence, delays, past employers."""
 import json, glob, os, re, sys
 from datetime import datetime
-from common import W, CFG, BLOCK, CITY_CODE, EXTRA_CITIES
+from common import W, CFG, BLOCK, CITY_CODE, EXTRA_CITIES, EXTRA_RATIO
 st = json.load(open(W + '/boss-state.json')); S = st['success']
 base = os.path.dirname(W); prev = set()
 for f in glob.glob(base + '/round-*/decisions.jsonl'):
@@ -14,7 +14,7 @@ for f in glob.glob(base + '/round-*/decisions.jsonl'):
         except Exception: pass
 bad = []
 ex = sum(s['city'] in EXTRA_CITIES for s in S)
-if ex > (len(S) - ex) / 2: bad.append(('补充城市', ex, '超过主力城市的一半'))
+if ex > (len(S) - ex) * EXTRA_RATIO: bad.append(('补充城市', ex, f'超过主力城市的 {EXTRA_RATIO} 倍'))
 for s in S:
     sal = s['salary']; m = re.match(r'(\d+)-(\d+)K', sal); d = re.match(r'(\d+)-(\d+)元/天', sal)
     if '实习' in s['employmentType']:

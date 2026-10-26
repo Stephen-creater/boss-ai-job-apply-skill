@@ -12,4 +12,5 @@ BLOCK = '|'.join(CFG.get('past_employers', [])) or '(?!x)x'
 MAIN_CITIES = CFG.get('main_cities', {'杭州': '101210100', '上海': '101020100'})
 EXTRA_CITIES = CFG.get('extra_cities', {'北京': '101010100', '深圳': '101280600', '广州': '101280100'})
 CITY_CODE = {**MAIN_CITIES, **EXTRA_CITIES}
+EXTRA_RATIO = CFG.get('extra_ratio', 0.5)   # 补充城市成功数 ≤ 主力城市成功数 × 这个比例
 os.makedirs(D, exist_ok=True)

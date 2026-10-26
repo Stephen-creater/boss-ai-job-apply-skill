@@ -1,6 +1,6 @@
 # go.py reads.jsonl ms.json 'prefix|type|note' ...  (<=4 per call)
 import json,sys,re,subprocess
-from common import SK,D as T,BLOCK,W,CITY_CODE,EXTRA_CITIES
+from common import SK,D as T,BLOCK,W,CITY_CODE,EXTRA_CITIES,EXTRA_RATIO
 reads={}
 for l in open(sys.argv[1]):
   try: r=json.loads(l); reads[r['url']]=r
@@ -14,7 +14,7 @@ for a in sys.argv[3:]:
   if r['city'] not in CITY_CODE: print('BLOCKED city',h,r['city']); continue
   if r['city'] in EXTRA_CITIES:
     S=json.load(open(W+'/boss-state.json'))['success']; ex=sum(s['city'] in EXTRA_CITIES for s in S)
-    if ex+1 > (len(S)-ex)/2: print('HOLD 补充城市已到主力城市的一半，先投杭州/上海',h,r['city']); continue
+    if ex+1 > (len(S)-ex)*EXTRA_RATIO: print('HOLD 补充城市已到上限比例，先投杭州/上海',h,r['city']); continue
   q=m.get('q','AI Agent'); c=m.get('c',CITY_CODE[r['city']]); sal=m.get('sal','')
   out=subprocess.run(['python3',SK+'/run.py','psend',h,q,c,sal],capture_output=True,text=True); out=(out.stdout+out.stderr).strip(); print(out[:260])
   if 'card not found' in out:
