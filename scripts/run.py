@@ -17,7 +17,7 @@ import space
 env['SPACE'] = space.ensure()   # recreate the space if ego cleared it; stop if the new one is not logged in
 js = 'const ENV=' + json.dumps(env, ensure_ascii=False) + ';\n' + open(SK + '/guard.js').read() + '\n' + open(f'{SK}/{f}.js').read()
 r = subprocess.run(['ego-browser', 'nodejs'], input=js, text=True, capture_output=True)
-lines = [l for l in (r.stdout + r.stderr).splitlines() if 'notice' not in l and 'browser-up' not in l]
+lines = [l for l in (r.stdout + r.stderr).split('\n') if 'notice' not in l and 'browser-up' not in l]
 out = '\n'.join(lines)
 # ---- record usage ----
 if f == 'msearch':
